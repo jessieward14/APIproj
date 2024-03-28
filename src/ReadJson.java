@@ -23,15 +23,28 @@ import javax.swing.*;
 // Program for print data in JSON format.
 public class ReadJson {
 
-    public JFrame frame;
+    public JFrame mainframe;
+
     public JLabel url, allies;
     public int currentCharIndex = 0;
+    private JTextField t1;
+    private JTextField t2;
+    private JMenuBar mb;
+    public JTextArea Results;
+    public String keyword = "breed";
+    public String link = "https://dog.ceo/";
 
 
+    public ReadJson(){
+        createAndShowGUI();
+    }
     public void createAndShowGUI() {
 
         // Create the basic frame
-        frame = new JFrame("Layout Demo");
+        mainframe = new JFrame("Layout Demo");
+        mainframe.setLayout(new BorderLayout());
+        t1 = new JTextField("Name: First and Last");
+
 
         // Create a top panel
         JPanel top = new JPanel();
@@ -49,12 +62,15 @@ public class ReadJson {
         JPanel bottom = new JPanel();
 
 
+
+
+
         // Show the Frame
-        frame.pack();
-        frame.setSize(800, 700);
-        frame.setLayout(new GridLayout(4, 1));
+        mainframe.pack();
+        mainframe.setSize(800, 700);
         createComponents();
-        frame.setVisible(true);
+        mainframe.setVisible(true);
+        System.out.println(mainframe);
     }
 
     public void createComponents() {
@@ -62,23 +78,22 @@ public class ReadJson {
         url = new JLabel("name");
         allies = new JLabel("allies");
         layout();
-        frame.setVisible(true);
+        mainframe.setVisible(true);
 
         //  createComponents();
     }
 
     public void layout() {
 
-        frame.add(url);
-        frame.add(allies);
-        JButton nextButton = new JButton("Next");
-        JButton previousButton = new JButton("Previous");
-        nextButton.setActionCommand("Next");
-        previousButton.setActionCommand("Previous");
+        mainframe.add(url);
+        JButton AcceptButton = new JButton("Accept");
+        JButton RejectButton = new JButton("Reject");
+        AcceptButton.setActionCommand("Accept");
+        RejectButton.setActionCommand("Reject");
 
-        frame.add(nextButton);
-        frame.add(previousButton);
-        frame.setVisible(true);
+        mainframe.add(AcceptButton);
+        mainframe.add(RejectButton);
+        mainframe.setVisible(true);
 
 
     }
@@ -148,7 +163,7 @@ public class ReadJson {
 
 
 
-
+//chat gtp api - heres photo of dog heres breed - give me description of dog for dog walking app
 
 
 
@@ -157,7 +172,19 @@ public class ReadJson {
 
             System.out.println(dog);
 
-            
+            int beginIndex = dog.indexOf("breeds/");//begin equals href
+            String chop = dog.substring(beginIndex + 7);
+            int endIndex = (chop.indexOf("/"));
+           //int finish = chop.indexOf("\'");
+            //System.out.println(endIndex);
+            String chip = (chop.substring(0, endIndex));
+
+
+
+            //System.out.println(chop);
+            System.out.println(chip);
+            //System.out.println(endIndex+finish);
+
            // System.out.println(dog.get("name"));
 
 
@@ -173,31 +200,28 @@ public class ReadJson {
 
 
 
-            try {
-
-                String name = (String) jsonObject.get("name");
-
-                org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObject.get("films");
-                int n = msg.size(); //(msg).length();
-                for (int i = 0; i < n; ++i) {
-                    String test = (String) msg.get(i);
-                    System.out.println(test);
-                    // System.out.println(person.getInt("key"));
-                }
-                String nam = (String) jsonObject.get("height");
-                System.out.println(name);
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+    private class ButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+            System.out.println(t1.getText());
+            link = t1.getText();
+            keyword = t2.getText();
+
+            //  scroll.add(Results);
+            // mainFrame.add(scroll, BorderLayout.CENTER);
+        }
+    }
 }
+
+
+//if(keyword.contains("href=")){
+
 
 
 
