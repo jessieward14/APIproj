@@ -18,21 +18,32 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import javax.swing.*;
+
 
 
 // Program for print data in JSON format.
 public class ReadJson {
-
+ //implements ActionListener
     public JFrame mainframe;
+    public BufferStrategy bufferStrategy;
 
     public JLabel url, allies;
     public int currentCharIndex = 0;
     private JTextField t1;
+
+    public JPanel panel;
+    public JPanel panel1;
     private JTextField t2;
     private JMenuBar mb;
     public JTextArea Results;
     public String keyword = "breed";
     public String link = "https://dog.ceo/";
+    private int WIDTH = 800;
+    private int HEIGHT = 700;
 
 
     public ReadJson(){
@@ -40,35 +51,63 @@ public class ReadJson {
     }
     public void createAndShowGUI() {
 
+
+
+        JPanel panel1 = new JPanel();
+
+
+        JLabel lbl = new JLabel("Select one of the possible choices and click OK");
+        lbl.setVisible(true);
+
+        panel1.add(lbl);
+
+        String[] choices = { "CHOICE 1","CHOICE 2", "CHOICE 3","CHOICE 4","CHOICE 5","CHOICE 6"};
+
+        final JComboBox<String> cb = new JComboBox<String>(choices);
+
+        cb.setVisible(true);
+        panel1.add(cb);
+
+        JButton btn = new JButton("OK");
+        panel1.add(btn);
+
         // Create the basic frame
+
         mainframe = new JFrame("Layout Demo");
+        mainframe.setSize(WIDTH, HEIGHT);
         mainframe.setLayout(new BorderLayout());
+        panel = new JPanel();
+        panel.setLayout(new GridLayout(1,3));
         t1 = new JTextField("Name: First and Last");
 
-
         // Create a top panel
-        JPanel top = new JPanel();
+        //JPanel top = new JPanel();
 
         // Create a middle-left panel
-        JPanel left = new JPanel();
+        //JPanel left = new JPanel();
 
         // Create a center panel
-        JPanel center = new JPanel(new BorderLayout());
+        //JPanel center = new JPanel(new BorderLayout());
 
         // Create a middle-right panel
-        JPanel right = new JPanel();
+        //JPanel right = new JPanel();
 
         // Create a bottom panel
-        JPanel bottom = new JPanel();
+        //JPanel bottom = new JPanel();
 
 
-
+        mainframe.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                System.exit(0);
+            }
+        });
 
 
         // Show the Frame
-        mainframe.pack();
-        mainframe.setSize(800, 700);
-        createComponents();
+     //   mainframe.pack();
+       // mainframe.setSize(800, 700);
+      createComponents();
+        //mainframe.add(t1);
         mainframe.setVisible(true);
         System.out.println(mainframe);
     }
@@ -86,13 +125,19 @@ public class ReadJson {
     public void layout() {
 
         mainframe.add(url);
+
         JButton AcceptButton = new JButton("Accept");
         JButton RejectButton = new JButton("Reject");
         AcceptButton.setActionCommand("Accept");
         RejectButton.setActionCommand("Reject");
-
-        mainframe.add(AcceptButton);
-        mainframe.add(RejectButton);
+        AcceptButton.addActionListener(new ButtonClickListener());
+        RejectButton.addActionListener(new ButtonClickListener());
+        panel.add(AcceptButton);
+        panel.add(RejectButton);
+        mainframe.add(panel, BorderLayout.SOUTH);
+        mainframe.add(panel1,BorderLayout.NORTH);
+        //mainframe.add(AcceptButton);
+       // mainframe.add(RejectButton);
         mainframe.setVisible(true);
 
 
@@ -111,6 +156,7 @@ public class ReadJson {
         // To print in JSON format.
         System.out.print(file.get("Tution Fees"));
         pull();
+        ReadJson read = new ReadJson();
 
     }
 
@@ -217,6 +263,22 @@ public class ReadJson {
             // mainFrame.add(scroll, BorderLayout.CENTER);
         }
     }
+
+//    private class ButtonClickListener implements ActionListener {
+//        public void actionPerformed(ActionEvent e) {
+//            String command = e.getActionCommand();
+///*
+//            if (command.equals("Red")) {
+//                statusLabel.setText("Red Button clicked.");
+//            } else if (command.equals("Blue")) {
+//                statusLabel.setText("Blue Button clicked.");
+//            } else if (command.equals("Green")) {
+//                statusLabel.setText("Green Button clicked.");
+//            } else {
+//                statusLabel.setText("Erase Button clicked.");
+//            }*/
+//        }
+//    }
 }
 
 
