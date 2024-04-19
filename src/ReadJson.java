@@ -27,15 +27,18 @@ import javax.swing.*;
 
 // Program for print data in JSON format.
 public class ReadJson {
- //implements ActionListener
+    //implements ActionListener
     public JFrame mainframe;
     public BufferStrategy bufferStrategy;
-
-    public JLabel url, allies;
+    public JTextField url;
+    public JLabel label;
+    public JLabel label2;
+    public JLabel  allies;
     public int currentCharIndex = 0;
     private JTextField t1;
 
     public JPanel panel;
+    public JPanel centerpanel;
     public JPanel panel1;
     private JTextField t2;
     private JMenuBar mb;
@@ -46,22 +49,36 @@ public class ReadJson {
     private int HEIGHT = 700;
 
 
-    public ReadJson(){
+    public ReadJson() {
         createAndShowGUI();
     }
+
     public void createAndShowGUI() {
 
 
+        panel1 = new JPanel();
+        centerpanel = new JPanel();
+        label = new JLabel("");
+        label2 = new JLabel("       Welcome to Jessie's dog walking app!");
+//label2.();
 
-        JPanel panel1 = new JPanel();
-
-
-        JLabel lbl = new JLabel("Select one of the possible choices and click OK");
+        JLabel lbl = new JLabel("Select one of the possible breed choices and click OK");
         lbl.setVisible(true);
+        t1 = new JTextField("                           Name: First and Last");
 
+        mainframe = new JFrame("Dog Walking Profile");
+        mainframe.setSize(WIDTH, HEIGHT);
+        mainframe.setLayout(new BorderLayout());
+        centerpanel.setLayout(new GridLayout(2, 2));
         panel1.add(lbl);
+        centerpanel.add(t1);
+        centerpanel.add(label2);
+        centerpanel.add(label);
 
-        String[] choices = { "CHOICE 1","CHOICE 2", "CHOICE 3","CHOICE 4","CHOICE 5","CHOICE 6"};
+        mainframe.add(centerpanel, BorderLayout.CENTER);
+        //mainframe.add(label, BorderLayout.CENTER);
+
+        String[] choices = {"Bulldog-Boston", "Australian Shepard", "Boarder Collie", "Chihuahua", "Cockapoo", "Dalmatian", "Labradoodle", "Labrador", "Pitbull", "Golden Retriever"};
 
         final JComboBox<String> cb = new JComboBox<String>(choices);
 
@@ -69,16 +86,14 @@ public class ReadJson {
         panel1.add(cb);
 
         JButton btn = new JButton("OK");
-        panel1.add(btn);
+        //panel1.add(btn);
 
         // Create the basic frame
 
-        mainframe = new JFrame("Layout Demo");
-        mainframe.setSize(WIDTH, HEIGHT);
-        mainframe.setLayout(new BorderLayout());
+
         panel = new JPanel();
-        panel.setLayout(new GridLayout(1,3));
-        t1 = new JTextField("Name: First and Last");
+        panel.setLayout(new GridLayout(1, 3));
+
 
         // Create a top panel
         //JPanel top = new JPanel();
@@ -104,9 +119,9 @@ public class ReadJson {
 
 
         // Show the Frame
-     //   mainframe.pack();
-       // mainframe.setSize(800, 700);
-      createComponents();
+        //   mainframe.pack();
+        // mainframe.setSize(800, 700);
+        createComponents();
         //mainframe.add(t1);
         mainframe.setVisible(true);
         System.out.println(mainframe);
@@ -114,7 +129,7 @@ public class ReadJson {
 
     public void createComponents() {
 
-        url = new JLabel("name");
+        url = new JTextField("name");
         allies = new JLabel("allies");
         layout();
         mainframe.setVisible(true);
@@ -124,21 +139,26 @@ public class ReadJson {
 
     public void layout() {
 
-        mainframe.add(url);
+       // mainframe.add(url);
 
         JButton AcceptButton = new JButton("Accept");
         JButton RejectButton = new JButton("Reject");
+        JButton btn = new JButton("0k");
         AcceptButton.setActionCommand("Accept");
         RejectButton.setActionCommand("Reject");
+        btn.setActionCommand("Ok");
         AcceptButton.addActionListener(new ButtonClickListener());
         RejectButton.addActionListener(new ButtonClickListener());
+        btn.addActionListener(new ButtonClickListener());
         panel.add(AcceptButton);
         panel.add(RejectButton);
         mainframe.add(panel, BorderLayout.SOUTH);
-        mainframe.add(panel1,BorderLayout.NORTH);
+        mainframe.add(panel1, BorderLayout.NORTH);
+        panel1.add(btn);
         //mainframe.add(AcceptButton);
-       // mainframe.add(RejectButton);
+        // mainframe.add(RejectButton);
         mainframe.setVisible(true);
+
 
 
     }
@@ -207,13 +227,7 @@ public class ReadJson {
             String dog = (String) jsonObject.get("message");
 
 
-
-
 //chat gtp api - heres photo of dog heres breed - give me description of dog for dog walking app
-
-
-
-
 
 
             System.out.println(dog);
@@ -221,65 +235,68 @@ public class ReadJson {
             int beginIndex = dog.indexOf("breeds/");//begin equals href
             String chop = dog.substring(beginIndex + 7);
             int endIndex = (chop.indexOf("/"));
-           //int finish = chop.indexOf("\'");
+            //int finish = chop.indexOf("\'");
             //System.out.println(endIndex);
             String chip = (chop.substring(0, endIndex));
-
 
 
             //System.out.println(chop);
             System.out.println(chip);
             //System.out.println(endIndex+finish);
 
-           // System.out.println(dog.get("name"));
+            // System.out.println(dog.get("name"));
 
 
-
-
-
-
-          //  JSONArray dog = (JSONArray) dog.get("allies");
-          //  System.out.println(dog.get(0));
-
-
-
-
-
-
+            //  JSONArray dog = (JSONArray) dog.get("allies");
+            //  System.out.println(dog.get(0));
 
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             System.out.println(t1.getText());
             link = t1.getText();
-            keyword = t2.getText();
+           // keyword = t2.getText();
 
             //  scroll.add(Results);
             // mainFrame.add(scroll, BorderLayout.CENTER);
+
+
+            if (command.equals("Accept")) {
+               // statusLabel.setText("New Client Added!");
+                System.out.print("New Client Added!");
+                label.setText("                             New Client Added!");
+
+            }
+            if (command.equals("Reject")) {
+               // statusLabel.setText("Client Declined!");
+                System.out.print("Client Declined!");
+                label.setText("                             Client Declined!");
+            }
+            if (command.equals("Ok")) {
+                // statusLabel.setText("Client Declined!");
+                System.out.print("Ok");
+                label.setText("                                       Ok");
+            }
+                    /*else if (command.equals("Blue")) {
+                statusLabel.setText("Blue Button clicked.");
+            } else if (command.equals("Green")) {
+                statusLabel.setText("Green Button clicked.");
+            } else {
+                statusLabel.setText("Erase Button clicked.");
+            }*/
         }
     }
 
-//    private class ButtonClickListener implements ActionListener {
-//        public void actionPerformed(ActionEvent e) {
-//            String command = e.getActionCommand();
-///*
-//            if (command.equals("Red")) {
-//                statusLabel.setText("Red Button clicked.");
-//            } else if (command.equals("Blue")) {
-//                statusLabel.setText("Blue Button clicked.");
-//            } else if (command.equals("Green")) {
-//                statusLabel.setText("Green Button clicked.");
-//            } else {
-//                statusLabel.setText("Erase Button clicked.");
-//            }*/
-//        }
-//    }
 }
+
+
+
 
 
 //if(keyword.contains("href=")){
