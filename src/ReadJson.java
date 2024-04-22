@@ -1,7 +1,9 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -17,6 +19,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -34,9 +37,12 @@ public class ReadJson {
     public JLabel label;
     public JLabel label2;
     public JLabel  allies;
+    public String dogurl;
     public int currentCharIndex = 0;
     private JTextField t1;
-
+    private JLabel imageLabel;
+    private JPanel imagePanel;
+    private JPanel searchPanel;
     public JPanel panel;
     public JPanel centerpanel;
     public JPanel panel1;
@@ -47,6 +53,7 @@ public class ReadJson {
     public String link = "https://dog.ceo/";
     private int WIDTH = 800;
     private int HEIGHT = 700;
+     JComboBox<String> cb;
 
 
     public ReadJson() {
@@ -78,9 +85,12 @@ public class ReadJson {
         mainframe.add(centerpanel, BorderLayout.CENTER);
         //mainframe.add(label, BorderLayout.CENTER);
 
-        String[] choices = {"Bulldog-Boston", "Australian Shepard", "Boarder Collie", "Chihuahua", "Cockapoo", "Dalmatian", "Labradoodle", "Labrador", "Pitbull", "Golden Retriever"};
+        String[] choices = {"Bulldog", "Australian", "Collie", "Chihuahua", "Cockapoo", "Dalmatian", "Labradoodle", "Labrador", "Pitbull", "Retriever"};
 
-        final JComboBox<String> cb = new JComboBox<String>(choices);
+
+       cb  = new JComboBox<String>(choices);
+
+
 
         cb.setVisible(true);
         panel1.add(cb);
@@ -93,6 +103,7 @@ public class ReadJson {
 
         panel = new JPanel();
         panel.setLayout(new GridLayout(1, 3));
+        imagePanel = new JPanel();
 
 
         // Create a top panel
@@ -175,17 +186,19 @@ public class ReadJson {
 
         // To print in JSON format.
         System.out.print(file.get("Tution Fees"));
-        pull();
+
         ReadJson read = new ReadJson();
+     //   read.pull();
 
     }
 
-    public static void pull() throws ParseException {
+    public  void pull(String dogbreed) throws ParseException {
         String output = "abc";
         String totlaJson = "";
         try {
 
-            URL url = new URL("https://dog.ceo/api/breed/affenpinscher/images/random");
+            URL url = new URL("https://dog.ceo/api/breed/" +dogbreed.toLowerCase()+"/images/random");
+
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -232,6 +245,8 @@ public class ReadJson {
 
             System.out.println(dog);
 
+            dogurl = dog;
+
             int beginIndex = dog.indexOf("breeds/");//begin equals href
             String chop = dog.substring(beginIndex + 7);
             int endIndex = (chop.indexOf("/"));
@@ -254,9 +269,65 @@ public class ReadJson {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        try {
+            addImage();
+        }catch (IOException e){
+            System.out.println("ioe error");
+        }
+    }
+    private void addImage() throws IOException {
+        try {
+            String path = "";
+            if (!t1.getText().contains("http")) {
+                path = "https://i.pinimg.com/originals/07/16/ba/0716ba54fe3b77b3a5b0b16c7bc33389.png";
+            } else {
+                path = t1.getText();
+                if (path.contains("url")) {
+                    path = path.substring(path.indexOf("http"));
+                }
+            }
+
+
+            URL url = new URL(dogurl);
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
+            BufferedImage inputImageBuff = ImageIO.read(url.openStream());
+            // weiYing =
+
+            ImageIcon inputImage;
+            if (inputImageBuff != null) {
+                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(350, 300, Image.SCALE_SMOOTH));
+                // = new JLabel();
+                if (inputImage != null) {
+                    imageLabel = new JLabel(inputImage);
+                } else {
+                    imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(350, 300, Image.SCALE_SMOOTH)));
+
+                }
+                imagePanel.removeAll();
+                imagePanel.add(imageLabel);
+                centerpanel.add(imagePanel, BorderLayout.CENTER);
+
+            } else {
+                imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(350, 300, Image.SCALE_SMOOTH)));
+
+            }
+
+        } catch (IOException e) {
+            System.out.println(e);
+            System.out.println("happiness");
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.png"));
+            JLabel imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(350, 300, Image.SCALE_SMOOTH)));
+
+            imagePanel.removeAll();
+            imagePanel.add(imageLabel);
+            mainframe.add(imagePanel);
+
+        }
+        mainframe.setVisible(true);
+
     }
 
-    private class ButtonClickListener implements ActionListener {
+        private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             System.out.println(t1.getText());
@@ -282,6 +353,12 @@ public class ReadJson {
                 // statusLabel.setText("Client Declined!");
                 System.out.print("Ok");
                 label.setText("                                       Ok");
+                System.out.println(cb.getSelectedItem());
+                try {
+                    pull((String)cb.getSelectedItem());
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
                     /*else if (command.equals("Blue")) {
                 statusLabel.setText("Blue Button clicked.");
